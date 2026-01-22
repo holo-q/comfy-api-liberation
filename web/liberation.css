@@ -1,0 +1,368 @@
+/* ComfyUI API Liberation - Styles */
+
+/* Modal overlay */
+.liberation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+/* Modal container */
+.liberation-modal {
+    background: #1a1a2e;
+    border: 1px solid #4a4a6a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+.liberation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #16162a;
+    border-bottom: 1px solid #4a4a6a;
+}
+
+.liberation-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #fff;
+}
+
+.liberation-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 8px;
+}
+
+.liberation-close:hover {
+    color: #fff;
+}
+
+/* Content */
+.liberation-content {
+    padding: 20px;
+    overflow-y: auto;
+    color: #ccc;
+}
+
+.liberation-content h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.liberation-content .hint {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+/* Status bar */
+.liberation-status-bar {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #12122a;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.status-item {
+    font-size: 13px;
+    color: #888;
+}
+
+.status-item.active {
+    color: #4ade80;
+}
+
+.status-item.inactive {
+    color: #f87171;
+}
+
+/* Provider rows */
+.liberation-providers {
+    margin-bottom: 24px;
+}
+
+.key-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: #12122a;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.key-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.provider-name {
+    font-weight: 600;
+    color: #fff;
+    min-width: 100px;
+}
+
+.status {
+    margin-left: auto;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.status.configured {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.status.missing {
+    color: #888;
+}
+
+/* Key actions */
+.key-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.key-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #3a3a5a;
+    border-radius: 4px;
+    background: #0a0a1a;
+    color: #fff;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.key-input:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+.btn-save,
+.btn-delete {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.btn-save {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.btn-save:hover {
+    background: #6366f1;
+}
+
+.btn-delete {
+    background: #3a3a5a;
+    color: #ccc;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Unmapped section */
+.liberation-unmapped {
+    border-top: 1px solid #3a3a5a;
+    padding-top: 20px;
+}
+
+.liberation-unmapped details {
+    background: #12122a;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.liberation-unmapped summary {
+    cursor: pointer;
+    color: #f59e0b;
+}
+
+.unmapped-list {
+    margin: 12px 0 0 0;
+    padding-left: 20px;
+    font-size: 12px;
+    color: #666;
+    font-family: monospace;
+}
+
+/* Menu button */
+#liberation-menu-btn {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 4px;
+    transition: opacity 0.2s;
+}
+
+#liberation-menu-btn:hover {
+    opacity: 0.9;
+}
+
+/* Key config popup */
+.liberation-key-prompt {
+    text-align: center;
+}
+
+.liberation-key-prompt .prompt-message {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.liberation-key-prompt .prompt-message strong {
+    color: #6366f1;
+}
+
+.key-input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.key-input.large {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.btn-save.large {
+    padding: 12px 24px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Highlighted row */
+.key-row.highlighted {
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid #6366f1;
+}
+
+/* Toast notification */
+.liberation-toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 10001;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 3.7s forwards;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes toastOut {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+/* Links in hints */
+.hint a {
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.hint a:hover {
+    text-decoration: underline;
+}
+
+/* Get API Key section in error popup */
+.get-key-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.get-key-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.get-key-link:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+/* Get Key button in key manager rows */
+.btn-get-key {
+    display: inline-block;
+    background: #10b981;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 8px;
+    transition: background 0.2s;
+}
+
+.btn-get-key:hover {
+    background: #059669;
+    text-decoration: none;
+}

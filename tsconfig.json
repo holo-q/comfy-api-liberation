@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": false,
+    "outDir": "./web",
+    "rootDir": "./src/web",
+    "declaration": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noImplicitAny": false
+  },
+  "include": ["src/web/**/*.ts"],
+  "exclude": ["node_modules"]
+}
