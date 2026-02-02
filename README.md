@@ -51,10 +51,17 @@ Restart ComfyUI after installation.
 
 ### Option 1: UI (Recommended)
 
-1. In ComfyUI, go to **Settings** (gear icon)
-2. Find **API Liberation** section
-3. Enter your API keys for each provider
-4. Keys are saved locally to `api_keys.json`
+Click the **API Keys** button in the toolbar:
+
+![API Keys button in toolbar](docs/1.png)
+
+This opens the API Key Manager where you can configure all providers:
+
+![API Key Manager popup](docs/2.png)
+
+- **Get Key** links directly to each provider's API key page
+- **Status** shows "Configured" (green) or "Not set"
+- Keys are saved locally to `api_keys.json`
 
 ### Option 2: Environment Variables
 
