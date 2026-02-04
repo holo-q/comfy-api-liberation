@@ -1,8 +1,18 @@
+<div align="center">
+
 # ComfyUI API Liberation
 
 **Use your own API keys. No ComfyUI account required.**
 
-ComfyUI's built-in API nodes route through `api.comfy.org` which requires an account and uses a credit system. This extension bypasses that entirely - your API calls go directly to the vendors (Google, OpenAI, Stability, etc.) using your own API keys.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom_Node-blue)](https://github.com/comfyanonymous/ComfyUI)
+
+---
+
+ComfyUI's built-in API nodes route through `api.comfy.org` which requires an account and uses a credit system.
+This extension bypasses that entirely - your API calls go directly to the vendors using your own API keys.
+
+</div>
 
 ## Features
 
@@ -17,55 +27,39 @@ ComfyUI's built-in API nodes route through `api.comfy.org` which requires an acc
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/oxysoft/comfy-api-liberation.git
+git clone https://github.com/holo-q/comfy-api-liberation.git
 ```
 
 Restart ComfyUI after installation.
-
-## Supported Providers
-
-| Provider | Get API Key |
-|----------|-------------|
-| Google (Gemini, Veo, Imagen) | [Google AI Studio](https://aistudio.google.com/app/apikey) |
-| OpenAI (GPT, DALL-E, Sora) | [OpenAI Platform](https://platform.openai.com/api-keys) |
-| Stability AI | [Stability Platform](https://platform.stability.ai/account/keys) |
-| BFL (Flux) | [BFL API](https://api.bfl.ml) |
-| Ideogram | [Ideogram API](https://ideogram.ai/manage-api) |
-| Recraft | [Recraft Docs](https://www.recraft.ai/docs/api-reference/getting-started) |
-| Luma Labs | [Luma API Keys](https://lumalabs.ai/dream-machine/api/keys) |
-| Runway | [Runway Dev](https://dev.runwayml.com) |
-| Kling AI | [Kling API](https://app.klingai.com/global/dev/api-key) |
-| MiniMax | [MiniMax Platform](https://platform.minimax.io) |
-| Pika | [Pika API](https://pika.art/api) |
-| Tripo3D | [Tripo Platform](https://platform.tripo3d.ai) |
-| Rodin (Hyper Human) | [Rodin Dashboard](https://hyperhuman.deemos.com/api-dashboard) |
-| Topaz Labs | [Topaz API](https://www.topazlabs.com/api) |
-| BytePlus | [BytePlus Console](https://console.byteplus.com) |
-| PixVerse | [PixVerse Platform](https://platform.pixverse.ai) |
-| Vidu | [Vidu Platform](https://platform.vidu.com) |
-| Moonvalley | [Moonvalley](https://www.moonvalley.com) |
-| LTX Studio | [LTX API](https://ltx.io/model/api) |
-| Wan (Alibaba) | [Alibaba Model Studio](https://www.alibabacloud.com/help/en/model-studio/get-api-key) |
 
 ## Configuration
 
 ### Option 1: UI (Recommended)
 
-Click the **API Keys** button in the toolbar:
+<table>
+<tr>
+<td width="300" align="center">
 
-![API Keys button in toolbar](docs/1.png)
+<img src="docs/1.png" width="280" alt="API Keys toolbar button"/>
 
-This opens the API Key Manager where you can configure all providers:
+<sub><b>1.</b> Click <b>API Keys</b> in toolbar</sub>
 
-![API Key Manager popup](docs/2.png)
+</td>
+<td width="500" align="center">
 
-- **Get Key** links directly to each provider's API key page
-- **Status** shows "Configured" (green) or "Not set"
-- Keys are saved locally to `api_keys.json`
+<img src="docs/2.png" width="480" alt="API Key Manager"/>
+
+<sub><b>2.</b> Enter keys for each provider</sub>
+
+</td>
+</tr>
+</table>
+
+> **Get Key** links directly to each provider's API key page
+> **Status** shows "Configured" (green) or "Not set"
+> Keys are saved locally to `api_keys.json`
 
 ### Option 2: Environment Variables
-
-Set environment variables before starting ComfyUI:
 
 ```bash
 export GOOGLE_API_KEY="your-key-here"
@@ -88,6 +82,51 @@ Create `api_keys.json` in the extension directory:
 
 **Priority:** Environment variables > Config file > UI settings
 
+## Supported Providers
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+| Provider | |
+|:---------|:-:|
+| Google (Gemini, Veo, Imagen) | [Get Key](https://aistudio.google.com/app/apikey) |
+| OpenAI (GPT, DALL-E, Sora) | [Get Key](https://platform.openai.com/api-keys) |
+| Stability AI | [Get Key](https://platform.stability.ai/account/keys) |
+| BFL (Flux) | [Get Key](https://api.bfl.ml) |
+| Ideogram | [Get Key](https://ideogram.ai/manage-api) |
+| Recraft | [Get Key](https://www.recraft.ai/docs) |
+| Luma Labs | [Get Key](https://lumalabs.ai/dream-machine/api/keys) |
+
+</td>
+<td width="33%" valign="top">
+
+| Provider | |
+|:---------|:-:|
+| Runway | [Get Key](https://dev.runwayml.com) |
+| Kling AI | [Get Key](https://app.klingai.com/global/dev/api-key) |
+| MiniMax | [Get Key](https://platform.minimax.io) |
+| Pika | [Get Key](https://pika.art/api) |
+| Tripo3D | [Get Key](https://platform.tripo3d.ai) |
+| Rodin (Hyper Human) | [Get Key](https://hyperhuman.deemos.com/api-dashboard) |
+| Topaz Labs | [Get Key](https://www.topazlabs.com/api) |
+
+</td>
+<td width="33%" valign="top">
+
+| Provider | |
+|:---------|:-:|
+| BytePlus | [Get Key](https://console.byteplus.com) |
+| PixVerse | [Get Key](https://platform.pixverse.ai) |
+| Vidu | [Get Key](https://platform.vidu.com) |
+| Moonvalley | [Get Key](https://www.moonvalley.com) |
+| LTX Studio | [Get Key](https://ltx.io/model/api) |
+| Wan (Alibaba) | [Get Key](https://www.alibabacloud.com/help/en/model-studio/get-api-key) |
+
+</td>
+</tr>
+</table>
+
 ## How It Works
 
 ComfyUI's API nodes make requests to `/proxy/*` endpoints on `api.comfy.org`. This extension:
@@ -101,22 +140,20 @@ All of this happens transparently - existing workflows work without modification
 
 ## Debugging
 
-Enable debug logging:
-
 ```bash
 LIBERATION_DEBUG=1 python main.py
 ```
 
-## Security Notes
+## Security
 
-- API keys are stored locally in `api_keys.json` (gitignored by default)
+- API keys are stored locally in `api_keys.json` (gitignored)
 - Keys are never sent to ComfyUI/Comfy.org servers
 - Each provider only receives its own API key
 
-## License
+---
 
-MIT License - see [LICENSE](LICENSE) file.
+<div align="center">
 
-## Contributing
+**MIT License** · Issues and PRs welcome
 
-Issues and PRs welcome. Please ensure `api_keys.json` is never committed.
+</div>
