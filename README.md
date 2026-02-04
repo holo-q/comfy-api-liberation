@@ -36,24 +36,17 @@ Restart ComfyUI after installation.
 
 ### Option 1: UI (Recommended)
 
-<table>
-<tr>
-<td width="300" align="center">
+<div align="center">
 
-<img src="docs/1.png" width="280" alt="API Keys toolbar button"/>
+**1.** Click **API Keys** in the toolbar
 
-<sub><b>1.</b> Click <b>API Keys</b> in toolbar</sub>
+<img src="docs/1.png" width="600" alt="API Keys toolbar button"/>
 
-</td>
-<td width="500" align="center">
+**2.** Enter keys for each provider
 
-<img src="docs/2.png" width="480" alt="API Key Manager"/>
+<img src="docs/2.png" width="500" alt="API Key Manager"/>
 
-<sub><b>2.</b> Enter keys for each provider</sub>
-
-</td>
-</tr>
-</table>
+</div>
 
 > **Get Key** links directly to each provider's API key page
 > **Status** shows "Configured" (green) or "Not set"
