@@ -47,13 +47,14 @@ const LIBERATION_ERR = /LIBERATION_(MISSING_KEY|INVALID_KEY):([a-z0-9_]+):/i;
 
 // Inline critical CSS so the modal stays usable even if the stylesheet fails to load.
 const INLINE_STYLE_ID = "liberation-inline-style";
+// Inline fallback uses ComfyUI's CSS vars with hardcoded defaults for resilience.
 const INLINE_CSS = `
-.liberation-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:999999}
-.liberation-modal{background:#1a1a2e;border:1px solid #4a4a6a;border-radius:8px;width:90%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 20px rgba(0,0,0,.5)}
-.liberation-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#16162a;border-bottom:1px solid #4a4a6a}
-.liberation-header h2{margin:0;font-size:18px;color:#fff}
-.liberation-close{background:none;border:none;color:#888;font-size:24px;cursor:pointer;padding:0 8px}
-.liberation-content{padding:20px;overflow-y:auto;color:#ccc}
+.liberation-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:999999}
+.liberation-modal{background:var(--comfy-menu-bg,#353535);border:1px solid var(--border-color,#4e4e4e);border-radius:6px;width:90%;max-width:700px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 4px #111}
+.liberation-header{display:flex;justify-content:space-between;align-items:center;padding:4px 10px;height:40px;border-bottom:1px solid var(--border-color,#4e4e4e)}
+.liberation-header h2{margin:0;font-size:1rem;color:var(--fg-color,#fff)}
+.liberation-close{background:none;border:none;color:var(--descrip-text,#999);font-size:1.4em;cursor:pointer;padding:0 8px}
+.liberation-content{padding:16px;overflow-y:auto;color:var(--input-text,#ddd)}
 `;
 
 // =============================================================================

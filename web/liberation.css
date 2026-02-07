@@ -1,80 +1,91 @@
-/* ComfyUI API Liberation - Styles */
+/* ComfyUI API Liberation - Styles
+ *
+ * Aligned with ComfyUI's native design language. Uses the host app's
+ * CSS variables so the modal themes automatically (dark/light).
+ *
+ * Key variables from ComfyUI:
+ *   --comfy-menu-bg   (#353535)  - panel/dialog background
+ *   --comfy-input-bg  (#222)     - input field background
+ *   --border-color    (#4e4e4e)  - borders
+ *   --fg-color        (#fff|#000)- primary text (theme-aware)
+ *   --input-text      (#ddd)     - input/secondary text
+ *   --descrip-text    (#999)     - muted/description text
+ *   --error-text      (#f44)     - error state
+ */
 
 /* Modal overlay */
 .liberation-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10000;
 }
 
-/* Modal container */
+/* Modal container - matches ComfyUI dialog: 6px radius, menu-bg, subtle shadow */
 .liberation-modal {
-    background: #1a1a2e;
-    border: 1px solid #4a4a6a;
-    border-radius: 8px;
+    background: var(--comfy-menu-bg, #353535);
+    border: 1px solid var(--border-color, #4e4e4e);
+    border-radius: 6px;
     width: 90%;
     max-width: 700px;
     max-height: 85vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 4px #111;
 }
 
-/* Header */
+/* Header - 40px height matching ComfyUI dialog-header */
 .liberation-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
-    background: #16162a;
-    border-bottom: 1px solid #4a4a6a;
+    padding: 4px 10px;
+    height: 40px;
+    border-bottom: 1px solid var(--border-color, #4e4e4e);
 }
 
 .liberation-header h2 {
     margin: 0;
-    font-size: 18px;
-    color: #fff;
+    font-size: 1rem;
+    color: var(--fg-color, #fff);
 }
 
+/* Close button - matches ComfyUI .dialog .close */
 .liberation-close {
     background: none;
     border: none;
-    color: #888;
-    font-size: 24px;
+    color: var(--descrip-text, #999);
+    font-size: 1.4em;
     cursor: pointer;
     padding: 0 8px;
 }
 
 .liberation-close:hover {
-    color: #fff;
+    color: var(--fg-color, #fff);
 }
 
 /* Content */
 .liberation-content {
-    padding: 20px;
+    padding: 16px;
     overflow-y: auto;
-    color: #ccc;
+    color: var(--input-text, #ddd);
 }
 
 .liberation-content h3 {
     margin: 0 0 8px 0;
     font-size: 13px;
-    color: #888;
+    color: var(--descrip-text, #999);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .liberation-content .hint {
     font-size: 11px;
-    color: #666;
+    color: var(--descrip-text, #999);
     margin-bottom: 8px;
 }
 
@@ -82,15 +93,15 @@
 .liberation-status-bar {
     display: flex;
     gap: 16px;
-    padding: 12px 16px;
-    background: #12122a;
+    padding: 10px 12px;
+    background: var(--comfy-input-bg, #222);
     border-radius: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .status-item {
     font-size: 13px;
-    color: #888;
+    color: var(--descrip-text, #999);
 }
 
 .status-item.active {
@@ -98,12 +109,12 @@
 }
 
 .status-item.inactive {
-    color: #f87171;
+    color: var(--error-text, #f44);
 }
 
 /* Provider rows - compact table layout, one provider per line */
 .liberation-providers {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .key-row {
@@ -111,14 +122,14 @@
     align-items: center;
     gap: 8px;
     padding: 4px 8px;
-    background: #12122a;
+    background: var(--comfy-input-bg, #222);
     border-radius: 4px;
     margin-bottom: 2px;
     height: 32px;
 }
 
 .key-row:hover {
-    background: #1a1a3a;
+    background: color-mix(in srgb, var(--comfy-input-bg, #222) 80%, var(--fg-color, #fff));
 }
 
 /* Status dot: green filled = configured, grey outline = not set */
@@ -134,24 +145,26 @@
 }
 
 .status-dot.missing {
-    color: #555;
+    color: var(--descrip-text, #999);
+    opacity: 0.5;
 }
 
 .provider-name {
     font-weight: 600;
-    color: #fff;
+    color: var(--fg-color, #fff);
     font-size: 12px;
     min-width: 90px;
     white-space: nowrap;
 }
 
+/* Input - matches ComfyUI .comfy-modal input: 8px radius, input-bg, border-color */
 .key-input {
     flex: 1;
-    padding: 4px 8px;
-    border: 1px solid #3a3a5a;
-    border-radius: 3px;
-    background: #0a0a1a;
-    color: #fff;
+    padding: 4px 10px;
+    border: 1px solid var(--border-color, #4e4e4e);
+    border-radius: 8px;
+    background: var(--comfy-input-bg, #222);
+    color: var(--input-text, #ddd);
     font-family: monospace;
     font-size: 12px;
     height: 24px;
@@ -160,50 +173,51 @@
 
 .key-input:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: var(--p-primary-color, #31b9f4);
 }
 
+/* Buttons */
 .btn-save,
 .btn-delete {
     border: none;
-    border-radius: 3px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 11px;
-    transition: background 0.2s;
+    transition: background 0.15s, color 0.15s;
     flex-shrink: 0;
     height: 24px;
 }
 
 .btn-save {
-    background: #4f46e5;
+    background: var(--p-primary-color, #31b9f4);
     color: #fff;
     padding: 0 10px;
 }
 
 .btn-save:hover {
-    background: #6366f1;
+    opacity: 0.85;
 }
 
 .btn-delete {
     background: transparent;
-    color: #666;
+    color: var(--descrip-text, #999);
     padding: 0 6px;
     font-size: 16px;
     line-height: 24px;
 }
 
 .btn-delete:hover {
-    color: #ef4444;
+    color: var(--error-text, #f44);
 }
 
 /* Unmapped section */
 .liberation-unmapped {
-    border-top: 1px solid #3a3a5a;
-    padding-top: 20px;
+    border-top: 1px solid var(--border-color, #4e4e4e);
+    padding-top: 16px;
 }
 
 .liberation-unmapped details {
-    background: #12122a;
+    background: var(--comfy-input-bg, #222);
     border-radius: 6px;
     padding: 12px;
 }
@@ -217,40 +231,40 @@
     margin: 12px 0 0 0;
     padding-left: 20px;
     font-size: 12px;
-    color: #666;
+    color: var(--descrip-text, #999);
     font-family: monospace;
 }
 
 /* Menu button */
 #liberation-menu-btn {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: #fff;
-    border: none;
+    background: var(--comfy-menu-bg, #353535);
+    color: var(--fg-color, #fff);
+    border: 1px solid var(--border-color, #4e4e4e);
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
     margin: 4px;
-    transition: opacity 0.2s;
+    transition: background 0.15s;
 }
 
 #liberation-menu-btn:hover {
-    opacity: 0.9;
+    background: var(--comfy-input-bg, #222);
 }
 
-/* Key config popup */
+/* Key config popup (single-provider prompt dialog) */
 .liberation-key-prompt {
     text-align: center;
 }
 
 .liberation-key-prompt .prompt-message {
     font-size: 14px;
-    color: #ccc;
+    color: var(--input-text, #ddd);
     margin-bottom: 20px;
 }
 
 .liberation-key-prompt .prompt-message strong {
-    color: #6366f1;
+    color: var(--p-primary-color, #31b9f4);
 }
 
 .key-input-group {
@@ -261,20 +275,21 @@
 
 .key-input.large {
     flex: 1;
-    padding: 12px 16px;
+    padding: 10px 16px;
     font-size: 14px;
+    height: auto;
 }
 
 .btn-save.large {
-    padding: 12px 24px;
+    padding: 10px 24px;
     font-size: 14px;
+    height: auto;
     white-space: nowrap;
 }
 
 /* Highlighted row */
 .key-row.highlighted {
-    background: rgba(99, 102, 241, 0.15);
-    outline: 1px solid #6366f1;
+    outline: 1px solid var(--p-primary-color, #31b9f4);
     outline-offset: -1px;
 }
 
@@ -284,14 +299,15 @@
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
+    background: var(--comfy-menu-bg, #353535);
+    color: var(--fg-color, #fff);
+    border: 1px solid var(--border-color, #4e4e4e);
     padding: 12px 24px;
     border-radius: 8px;
     font-size: 14px;
     z-index: 10001;
     animation: toastIn 0.3s ease, toastOut 0.3s ease 3.7s forwards;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 4px #111;
 }
 
 @keyframes toastIn {
@@ -318,7 +334,7 @@
 
 /* Links in hints */
 .hint a {
-    color: #6366f1;
+    color: var(--p-primary-color, #31b9f4);
     text-decoration: none;
 }
 
@@ -334,19 +350,18 @@
 
 .get-key-link {
     display: inline-block;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: #10b981;
     color: white;
     padding: 10px 20px;
-    border-radius: 6px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.15s;
 }
 
 .get-key-link:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    opacity: 0.85;
     text-decoration: none;
 }
 
@@ -360,8 +375,8 @@
     font-size: 12px;
     width: 18px;
     flex-shrink: 0;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+    opacity: 0.5;
+    transition: opacity 0.15s;
 }
 
 .btn-get-key:hover {
