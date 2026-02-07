@@ -2,26 +2,68 @@
 
 # ComfyUI API Liberation
 
-**Use your own API keys. No ComfyUI account required.**
+**Use your own API keys. Break the proxy. No middleman credits.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ComfyUI](https://img.shields.io/badge/ComfyUI-Custom_Node-blue)](https://github.com/comfyanonymous/ComfyUI)
 
 ---
 
-ComfyUI's built-in API nodes route through `api.comfy.org` which requires an account and uses a credit system.
-This extension bypasses that entirely - your API calls go directly to the vendors using your own API keys.
+ComfyUI's built-in API nodes don't call vendor APIs directly. They route every request through
+`api.comfy.org` — a proxy that replaces vendor pricing with its own opaque credit system.
+You pay Comfy.org, Comfy.org pays the vendor. This is **API laundering**.
+
+This extension removes the middleman entirely. Your calls go direct. Your keys, your rates, your data.
 
 </div>
 
+## What is API Laundering?
+
+**API laundering** is the practice of wrapping third-party APIs behind a proxy service that
+substitutes the original vendor's pricing and authentication with its own credit system.
+The user never interacts with the actual provider — they buy proprietary credits from the
+middleman, who then makes the real API call on their behalf, pocketing the margin.
+
+The anatomy of an API laundry:
+
+```
+┌──────────┐     credits     ┌──────────────┐     real API key     ┌──────────┐
+│   User   │ ──────────────> │  Middleman   │ ──────────────────>  │  Vendor  │
+│          │ <─── response── │  (proxy)     │ <──── response ────  │  (API)   │
+└──────────┘                 └──────────────┘                      └──────────┘
+     pays markup                  keeps margin                    receives less
+     loses transparency           obscures real cost              ToS may prohibit
+```
+
+This matters because:
+
+- **Price opacity.** You can't compare what you're paying to what the vendor charges.
+  The middleman sets credit prices arbitrarily with no obligation to track vendor rate changes.
+- **Vendor ToS violations.** Many API providers explicitly prohibit reselling or proxying their
+  services without authorization. The middleman may be operating in a legal grey area —
+  or outright violating terms they agreed to.
+- **Data routing.** Your prompts, images, and generated content pass through a third party that
+  has no business seeing them. The vendor's privacy policy covered a two-party relationship;
+  the middleman inserted a third.
+- **Artificial dependency.** The software works without the proxy. The proxy exists to create a
+  billing chokepoint, not to provide functionality. If the middleman goes down, raises prices,
+  or changes terms, you lose access to APIs you could have called directly.
+- **Regulatory exposure.** As API resale and data brokerage come under increasing regulatory
+  scrutiny, intermediaries that repackage API access without clear licensing face growing
+  legal risk — risk that propagates to their users.
+
+API laundering is not "providing a service." Providing a service means adding value.
+A proxy that strips your ability to use your own API key and replaces it with a credit meter
+is extracting value. The distinction matters.
+
 ## Features
 
-- **Direct API routing** - Calls go straight to vendor APIs, not through ComfyUI's proxy
-- **No account needed** - Works without a ComfyUI/Comfy.org account
-- **Local asset storage** - Images/videos stored locally instead of uploaded to Comfy servers
-- **20+ providers supported** - All major AI APIs covered
-- **Simple UI** - Configure keys through ComfyUI's interface
-- **Graceful fallback** - If no key is set, falls back to default ComfyUI behavior
+- **Direct API routing** — Calls go straight to vendor APIs, not through any proxy
+- **No account needed** — Works without a ComfyUI/Comfy.org account
+- **Local asset storage** — Images/videos stored locally instead of uploaded to intermediary servers
+- **20+ providers supported** — All major AI APIs covered
+- **Simple UI** — Configure keys through ComfyUI's interface
+- **Graceful fallback** — If no key is set, falls back to default ComfyUI behavior
 
 ## Installation
 
@@ -122,14 +164,16 @@ Create `api_keys.json` in the extension directory:
 
 ## How It Works
 
-ComfyUI's API nodes make requests to `/proxy/*` endpoints on `api.comfy.org`. This extension:
+ComfyUI's API nodes send requests to `/proxy/*` endpoints on `api.comfy.org` — the laundry.
+This extension intercepts that flow and routes it where it should have gone in the first place:
 
 1. **Intercepts** outgoing API requests before they leave ComfyUI
-2. **Rewrites** `/proxy/vendor/...` URLs to direct vendor API URLs
+2. **Rewrites** `/proxy/vendor/...` URLs to direct vendor API endpoints
 3. **Injects** your API key as the appropriate auth header
-4. **Virtualizes** the file upload system so assets stay local
+4. **Virtualizes** the file upload system so assets stay on your machine
 
-All of this happens transparently - existing workflows work without modification.
+All of this happens transparently — existing workflows work without modification.
+No nodes to replace, no workflows to rebuild. The proxy is simply removed from the equation.
 
 ## Debugging
 
@@ -142,6 +186,7 @@ LIBERATION_DEBUG=1 python main.py
 - API keys are stored locally in `api_keys.json` (gitignored)
 - Keys are never sent to ComfyUI/Comfy.org servers
 - Each provider only receives its own API key
+- Your data travels directly between you and the vendor — no third-party pass-through
 
 ---
 

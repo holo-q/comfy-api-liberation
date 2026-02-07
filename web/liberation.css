@@ -65,17 +65,17 @@
 }
 
 .liberation-content h3 {
-    margin: 0 0 12px 0;
-    font-size: 14px;
+    margin: 0 0 8px 0;
+    font-size: 13px;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .liberation-content .hint {
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
 /* Status bar */
@@ -101,64 +101,61 @@
     color: #f87171;
 }
 
-/* Provider rows */
+/* Provider rows - compact table layout, one provider per line */
 .liberation-providers {
     margin-bottom: 24px;
 }
 
 .key-row {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 8px;
-    padding: 12px;
+    padding: 4px 8px;
     background: #12122a;
-    border-radius: 6px;
-    margin-bottom: 8px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    height: 32px;
 }
 
-.key-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.key-row:hover {
+    background: #1a1a3a;
+}
+
+/* Status dot: green filled = configured, grey outline = not set */
+.status-dot {
+    font-size: 10px;
+    flex-shrink: 0;
+    width: 14px;
+    text-align: center;
+}
+
+.status-dot.configured {
+    color: #4ade80;
+}
+
+.status-dot.missing {
+    color: #555;
 }
 
 .provider-name {
     font-weight: 600;
     color: #fff;
-    min-width: 100px;
-}
-
-.status {
-    margin-left: auto;
     font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 4px;
-}
-
-.status.configured {
-    color: #4ade80;
-    background: rgba(74, 222, 128, 0.1);
-}
-
-.status.missing {
-    color: #888;
-}
-
-/* Key actions */
-.key-actions {
-    display: flex;
-    gap: 8px;
+    min-width: 90px;
+    white-space: nowrap;
 }
 
 .key-input {
     flex: 1;
-    padding: 8px 12px;
+    padding: 4px 8px;
     border: 1px solid #3a3a5a;
-    border-radius: 4px;
+    border-radius: 3px;
     background: #0a0a1a;
     color: #fff;
     font-family: monospace;
-    font-size: 13px;
+    font-size: 12px;
+    height: 24px;
+    min-width: 0;
 }
 
 .key-input:focus {
@@ -168,17 +165,19 @@
 
 .btn-save,
 .btn-delete {
-    padding: 8px 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 11px;
     transition: background 0.2s;
+    flex-shrink: 0;
+    height: 24px;
 }
 
 .btn-save {
     background: #4f46e5;
     color: #fff;
+    padding: 0 10px;
 }
 
 .btn-save:hover {
@@ -186,13 +185,15 @@
 }
 
 .btn-delete {
-    background: #3a3a5a;
-    color: #ccc;
+    background: transparent;
+    color: #666;
+    padding: 0 6px;
+    font-size: 16px;
+    line-height: 24px;
 }
 
 .btn-delete:hover {
-    background: #ef4444;
-    color: #fff;
+    color: #ef4444;
 }
 
 /* Unmapped section */
@@ -272,8 +273,9 @@
 
 /* Highlighted row */
 .key-row.highlighted {
-    background: rgba(99, 102, 241, 0.2);
-    border: 1px solid #6366f1;
+    background: rgba(99, 102, 241, 0.15);
+    outline: 1px solid #6366f1;
+    outline-offset: -1px;
 }
 
 /* Toast notification */
@@ -348,21 +350,28 @@
     text-decoration: none;
 }
 
-/* Get Key button in key manager rows */
+/* Get Key link in key manager rows - compact arrow icon */
 .btn-get-key {
-    display: inline-block;
-    background: #10b981;
-    color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #10b981;
     text-decoration: none;
-    font-size: 11px;
-    font-weight: 500;
-    margin-left: 8px;
-    transition: background 0.2s;
+    font-size: 12px;
+    width: 18px;
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.2s;
 }
 
 .btn-get-key:hover {
-    background: #059669;
+    opacity: 1;
     text-decoration: none;
+}
+
+/* Spacer for providers without a Get Key link, keeps alignment */
+.btn-get-key-spacer {
+    display: inline-block;
+    width: 18px;
+    flex-shrink: 0;
 }

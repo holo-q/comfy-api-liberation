@@ -470,29 +470,26 @@ async function showKeyManager(highlightProvider?: string): Promise<void> {
     const providersHtml = Object.entries(keysData)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([provider, info]) => {
-            const statusClass = info.configured ? "configured" : "missing";
-            const statusText = info.configured ? "Configured" : "Not set";
             const highlightClass = provider === highlightProvider ? "highlighted" : "";
             const keyUrl = getProviderKeyUrl(provider);
             const getKeyLink = keyUrl
-                ? `<a href="${keyUrl}" target="_blank" rel="noopener" class="btn-get-key" title="Get API key from ${provider}">Get Key</a>`
-                : "";
+                ? `<a href="${keyUrl}" target="_blank" rel="noopener" class="btn-get-key" title="Get API key from ${provider}">&#x2197;</a>`
+                : `<span class="btn-get-key-spacer"></span>`;
+            const statusDot = info.configured
+                ? `<span class="status-dot configured" title="Configured">&#x25CF;</span>`
+                : `<span class="status-dot missing" title="Not set">&#x25CB;</span>`;
 
             return `
                 <div class="key-row ${highlightClass}" data-provider="${escapeHtml(provider)}">
-                    <div class="key-info">
-                        <span class="provider-name">${escapeHtml(provider)}</span>
-                        ${getKeyLink}
-                        <span class="status ${statusClass}">${statusText}</span>
-                    </div>
-                    <div class="key-actions">
-                        <input type="password"
-                               class="key-input"
-                               placeholder="Enter API key..."
-                               data-provider="${escapeHtml(provider)}">
-                        <button class="btn-save" data-provider="${escapeHtml(provider)}">Save</button>
-                        <button class="btn-delete" data-provider="${escapeHtml(provider)}">Clear</button>
-                    </div>
+                    ${statusDot}
+                    <span class="provider-name">${escapeHtml(provider)}</span>
+                    ${getKeyLink}
+                    <input type="password"
+                           class="key-input"
+                           placeholder="key..."
+                           data-provider="${escapeHtml(provider)}">
+                    <button class="btn-save" data-provider="${escapeHtml(provider)}">Save</button>
+                    <button class="btn-delete" data-provider="${escapeHtml(provider)}" title="Clear key">&times;</button>
                 </div>
             `;
         })
