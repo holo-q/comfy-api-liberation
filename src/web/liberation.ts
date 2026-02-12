@@ -58,31 +58,30 @@ const INLINE_CSS = `
 `;
 
 // =============================================================================
-// Provider API Key URLs - Direct links to get API keys from each vendor
+// Provider API Key URLs — fetched from backend (single source of truth in
+// mappings/PROVIDER_REGISTRY). Populated on setup() via /api/liberation/providers.
 // =============================================================================
 
-const PROVIDER_KEY_URLS: Record<string, string> = {
-    google: "https://aistudio.google.com/app/apikey",
-    openai: "https://platform.openai.com/api-keys",
-    stability: "https://platform.stability.ai/account/keys",
-    bfl: "https://api.bfl.ml",
-    ideogram: "https://ideogram.ai/manage-api",
-    recraft: "https://www.recraft.ai/docs/api-reference/getting-started",
-    luma: "https://lumalabs.ai/dream-machine/api/keys",
-    runway: "https://dev.runwayml.com",
-    kling: "https://app.klingai.com/global/dev/api-key",
-    minimax: "https://platform.minimax.io",
-    pika: "https://pika.art/api",
-    tripo: "https://platform.tripo3d.ai",
-    rodin: "https://hyperhuman.deemos.com/api-dashboard",
-    topaz: "https://www.topazlabs.com/api",
-    byteplus: "https://console.byteplus.com",
-    pixverse: "https://platform.pixverse.ai",
-    vidu: "https://platform.vidu.com",
-    moonvalley: "https://www.moonvalley.com",
-    ltx: "https://ltx.io/model/api",
-    wan: "https://www.alibabacloud.com/help/en/model-studio/get-api-key",
-};
+let PROVIDER_KEY_URLS: Record<string, string> = {};
+
+/**
+ * Fetch provider key URLs from the backend registry.
+ * Called once during setup() so the data is available for error popups.
+ */
+async function loadProviderKeyUrls(): Promise<void> {
+    try {
+        const resp = await api.fetchApi("/api/liberation/providers");
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.key_urls) {
+                PROVIDER_KEY_URLS = data.key_urls;
+                console.log(`[liberation] Loaded ${Object.keys(PROVIDER_KEY_URLS).length} provider key URLs`);
+            }
+        }
+    } catch (e) {
+        console.warn("[liberation] Failed to load provider key URLs:", e);
+    }
+}
 
 /**
  * Get the API key signup URL for a provider, or null if unknown.
@@ -608,6 +607,7 @@ app.registerExtension({
     async setup() {
         console.log("[liberation] Setting up frontend extension...");
         ensureStylesLoaded();
+        await loadProviderKeyUrls();
         installDispatchInterceptor();
 
         // Set up error interception for missing API keys

@@ -15,29 +15,9 @@ _keys_cache: dict[str, str] = {}
 _cache_lock = Lock()
 _loaded = False
 
-# All supported providers
-PROVIDERS = [
-    'google',
-    'openai',
-    'stability',
-    'bfl',
-    'ideogram',
-    'recraft',
-    'luma',
-    'runway',
-    'kling',
-    'minimax',
-    'pika',
-    'tripo',
-    'rodin',
-    'topaz',
-    'byteplus',
-    'pixverse',
-    'vidu',
-    'moonvalley',
-    'ltx',
-    'wan',
-]
+# All supported providers — derived from the single source of truth
+# in mappings.PROVIDER_REGISTRY. Do NOT hardcode providers here.
+from .mappings import PROVIDERS
 
 
 def _load_config():

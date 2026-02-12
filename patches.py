@@ -22,31 +22,9 @@ _original_validate_or_raise = None
 _original_upload_file = None
 
 
-_NODE_MODULE_TO_PROVIDER: dict[str, str] = {
-    "comfy_api_nodes.nodes_gemini": "google",
-    "comfy_api_nodes.nodes_veo2": "google",
-    "comfy_api_nodes.nodes_openai": "openai",
-    "comfy_api_nodes.nodes_sora": "openai",
-    "comfy_api_nodes.nodes_stability": "stability",
-    "comfy_api_nodes.nodes_bfl": "bfl",
-    "comfy_api_nodes.nodes_ideogram": "ideogram",
-    "comfy_api_nodes.nodes_recraft": "recraft",
-    "comfy_api_nodes.nodes_luma": "luma",
-    "comfy_api_nodes.nodes_runway": "runway",
-    "comfy_api_nodes.nodes_kling": "kling",
-    "comfy_api_nodes.nodes_minimax": "minimax",
-    "comfy_api_nodes.nodes_tripo": "tripo",
-    "comfy_api_nodes.nodes_rodin": "rodin",
-    "comfy_api_nodes.nodes_topaz": "topaz",
-    # Comfy file is named `nodes_bytedance.py`, but provider config is `byteplus`.
-    "comfy_api_nodes.nodes_bytedance": "byteplus",
-    "comfy_api_nodes.nodes_pixverse": "pixverse",
-    "comfy_api_nodes.nodes_vidu": "vidu",
-    "comfy_api_nodes.nodes_moonvalley": "moonvalley",
-    # Comfy file is named `nodes_ltxv.py`, but provider config is `ltx`.
-    "comfy_api_nodes.nodes_ltxv": "ltx",
-    "comfy_api_nodes.nodes_wan": "wan",
-}
+# Derived from the single source of truth in mappings.PROVIDER_REGISTRY.
+# Maps ComfyUI node module paths → provider names for error attribution.
+from .mappings import NODE_MODULE_MAP as _NODE_MODULE_TO_PROVIDER
 
 
 def _infer_provider(node_cls: Any) -> Optional[str]:

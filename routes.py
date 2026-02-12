@@ -89,7 +89,10 @@ def register_routes():
 
     @routes.get("/api/liberation/providers")
     async def list_providers(request):
-        """List all supported providers."""
-        return web.json_response(config.PROVIDERS)
+        """List all supported providers with metadata (key URLs, etc.)."""
+        return web.json_response({
+            "providers": config.PROVIDERS,
+            "key_urls": mappings.KEY_URLS,
+        })
 
     log.info("Liberation API routes registered")
