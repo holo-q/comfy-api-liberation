@@ -175,6 +175,16 @@ This extension intercepts that flow and routes it where it should have gone in t
 All of this happens transparently — existing workflows work without modification.
 No nodes to replace, no workflows to rebuild. The proxy is simply removed from the equation.
 
+## Roadmap
+
+- [x] Direct API routing — bypass the proxy, call vendors directly
+- [x] API Key Manager UI with per-provider status
+- [x] Local asset virtualization — no uploads to intermediary servers
+- [x] Environment variable and config file support
+- [x] Graceful fallback to default ComfyUI behavior when no key is set
+- [x] 20+ provider mappings (Google, OpenAI, Stability, BFL, Runway, etc.)
+- [ ] **Real pricing hints** — replace ComfyUI's opaque credit cost per node with actual vendor $/request pricing
+
 ## Debugging
 
 ```bash
