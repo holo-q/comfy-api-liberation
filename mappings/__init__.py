@@ -38,6 +38,10 @@ PROVIDER_REGISTRY: dict[str, dict] = {
         "node_modules": ["comfy_api_nodes.nodes_openai", "comfy_api_nodes.nodes_sora"],
         "key_url": "https://platform.openai.com/api-keys",
     },
+    "elevenlabs": {
+        "node_modules": ["comfy_api_nodes.nodes_elevenlabs"],
+        "key_url": "https://elevenlabs.io/app/settings/api-keys",
+    },
     "grok": {
         "node_modules": ["comfy_api_nodes.nodes_grok"],
         "key_url": "https://console.x.ai/",
