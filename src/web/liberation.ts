@@ -291,6 +291,29 @@ function showSuccessToast(message: string): void {
     setTimeout(() => toast.remove(), 4000);
 }
 
+async function copyTextToClipboard(text: string): Promise<void> {
+    if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "true");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+        if (!document.execCommand("copy")) {
+            throw new Error("Clipboard copy command was rejected");
+        }
+    } finally {
+        textarea.remove();
+    }
+}
+
 // =============================================================================
 // Error Interception
 // =============================================================================
@@ -498,6 +521,9 @@ async function showKeyManager(highlightProvider?: string): Promise<void> {
     const unmappedHtml = statusData.unmapped_endpoints.length > 0
         ? `<details>
                <summary>${statusData.unmapped_count} unmapped endpoints</summary>
+               <div class="unmapped-actions">
+                   <button class="btn-copy-unmapped" type="button">Copy Full List</button>
+               </div>
                <ul class="unmapped-list">
                    ${statusData.unmapped_endpoints.slice(0, 20).map(ep => `<li>${escapeHtml(ep)}</li>`).join("")}
                    ${statusData.unmapped_count > 20 ? `<li>... and ${statusData.unmapped_count - 20} more</li>` : ""}
@@ -534,6 +560,20 @@ async function showKeyManager(highlightProvider?: string): Promise<void> {
     modal.querySelectorAll<HTMLButtonElement>(".btn-delete").forEach(btn => {
         btn.onclick = () => deleteKey(btn.dataset.provider!);
     });
+
+    const copyBtn = modal.querySelector<HTMLButtonElement>(".btn-copy-unmapped");
+    if (copyBtn) {
+        copyBtn.onclick = async () => {
+            const fullList = statusData.unmapped_endpoints.join("\n");
+            try {
+                await copyTextToClipboard(fullList);
+                showSuccessToast(`Copied ${statusData.unmapped_count} unmapped endpoints.`);
+            } catch (e) {
+                const error = e instanceof Error ? e.message : String(e);
+                alert(`Failed to copy unmapped endpoints: ${error}`);
+            }
+        };
+    }
 }
 
 async function saveKey(provider: string): Promise<void> {

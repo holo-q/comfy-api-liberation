@@ -227,6 +227,26 @@
     color: #f59e0b;
 }
 
+.unmapped-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-copy-unmapped {
+    background: transparent;
+    color: var(--p-primary-color, #31b9f4);
+    border: 1px solid var(--border-color, #4e4e4e);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 6px 10px;
+}
+
+.btn-copy-unmapped:hover {
+    background: color-mix(in srgb, var(--comfy-input-bg, #222) 80%, var(--fg-color, #fff));
+}
+
 .unmapped-list {
     margin: 12px 0 0 0;
     padding-left: 20px;
