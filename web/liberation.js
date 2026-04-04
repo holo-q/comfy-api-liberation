@@ -30,6 +30,7 @@ const INLINE_CSS = `
 // mappings/PROVIDER_REGISTRY). Populated on setup() via /api/liberation/providers.
 // =============================================================================
 let PROVIDER_KEY_URLS = {};
+let PASS_AVAILABLE = true;
 /**
  * Fetch provider key URLs from the backend registry.
  * Called once during setup() so the data is available for error popups.
@@ -43,6 +44,7 @@ async function loadProviderKeyUrls() {
                 PROVIDER_KEY_URLS = data.key_urls;
                 console.log(`[liberation] Loaded ${Object.keys(PROVIDER_KEY_URLS).length} provider key URLs`);
             }
+            PASS_AVAILABLE = data.pass_available !== false;
         }
     }
     catch (e) {
@@ -126,6 +128,57 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+function getRowSource(row) {
+    return row.dataset.source === "pass" ? "pass" : "local";
+}
+function setRowSource(row, source) {
+    row.dataset.source = source;
+    const input = row.querySelector(".key-input");
+    const toggle = row.querySelector(".btn-source-toggle");
+    if (!input || !toggle)
+        return;
+    row.classList.toggle("source-pass", source === "pass");
+    row.classList.toggle("source-local", source === "local");
+    toggle.textContent = source === "pass" ? "pass" : "key";
+    toggle.title = source === "pass" ? "Using a pass entry path" : "Using a locally stored key";
+    if (source === "pass") {
+        input.type = "text";
+        input.placeholder = "pass path...";
+        input.value = row.dataset.passPath || "";
+    }
+    else {
+        input.type = "password";
+        input.placeholder = row.dataset.configured === "true" ? "Stored locally" : "key...";
+        input.value = "";
+    }
+}
+function configurePopupSource(source, sourceBtn, keyInput, saveBtn, hintEl) {
+    sourceBtn.dataset.source = source;
+    sourceBtn.textContent = source === "pass" ? "pass" : "key";
+    sourceBtn.title = source === "pass" ? "Store a pass entry path" : "Store a local key";
+    if (source === "pass") {
+        keyInput.type = "text";
+        keyInput.placeholder = "Enter pass entry path...";
+        saveBtn.textContent = "Save Path & Retry";
+        hintEl.innerHTML = `
+            Store the secret with the <code>pass</code> CLI and save only the entry path here.
+            <br>
+            The secret stays outside ComfyUI's config file.
+            <br>
+            <a href="#" id="show-all-keys">Manage all API keys...</a>
+        `;
+    }
+    else {
+        keyInput.type = "password";
+        keyInput.placeholder = "Enter API key...";
+        saveBtn.textContent = "Save & Retry";
+        hintEl.innerHTML = `
+            Your key is stored locally and never sent to ComfyUI servers.
+            <br>
+            <a href="#" id="show-all-keys">Manage all API keys...</a>
+        `;
+    }
+}
 // =============================================================================
 // API Key Configuration Popup (for missing key errors)
 // =============================================================================
@@ -161,6 +214,7 @@ async function showKeyConfigPopup(provider, opts) {
             ${getKeyLink ? `<div class="get-key-section">${getKeyLink}</div>` : ""}
 
             <div class="key-input-group">
+                <button id="liberation-key-source" class="btn-source-toggle large" type="button"${PASS_AVAILABLE ? "" : " disabled"}>key</button>
                 <input type="password"
                        id="liberation-key-input"
                        class="key-input large"
@@ -169,7 +223,7 @@ async function showKeyConfigPopup(provider, opts) {
                 <button id="liberation-save-key" class="btn-save large">Save & Retry</button>
             </div>
 
-            <p class="hint">
+            <p class="hint" id="liberation-key-storage-hint">
                 Your key is stored locally and never sent to ComfyUI servers.
                 <br>
                 <a href="#" id="show-all-keys">Manage all API keys...</a>
@@ -179,11 +233,19 @@ async function showKeyConfigPopup(provider, opts) {
     // Wire up event handlers
     const saveBtn = modal.querySelector("#liberation-save-key");
     const keyInput = modal.querySelector("#liberation-key-input");
-    const showAllLink = modal.querySelector("#show-all-keys");
+    const sourceBtn = modal.querySelector("#liberation-key-source");
+    const hintEl = modal.querySelector("#liberation-key-storage-hint");
+    configurePopupSource("local", sourceBtn, keyInput, saveBtn, hintEl);
+    sourceBtn.onclick = () => {
+        const nextSource = sourceBtn.dataset.source === "pass" ? "local" : "pass";
+        configurePopupSource(nextSource, sourceBtn, keyInput, saveBtn, hintEl);
+        keyInput.focus();
+    };
     saveBtn.onclick = async () => {
-        const key = keyInput.value.trim();
-        if (!key) {
-            alert("Please enter an API key");
+        const source = sourceBtn.dataset.source === "pass" ? "pass" : "local";
+        const value = keyInput.value.trim();
+        if (!value) {
+            alert(source === "pass" ? "Please enter a pass entry path" : "Please enter an API key");
             return;
         }
         saveBtn.disabled = true;
@@ -192,7 +254,9 @@ async function showKeyConfigPopup(provider, opts) {
             const resp = await api.fetchApi(`/api/liberation/keys/${provider}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ key }),
+                body: JSON.stringify(source === "pass"
+                    ? { source, pass_path: value }
+                    : { source, key: value }),
             });
             if (!resp.ok) {
                 const err = await resp.json();
@@ -202,13 +266,15 @@ async function showKeyConfigPopup(provider, opts) {
             modal.remove();
             _popupShowing = false;
             // Show success and suggest re-running
-            showSuccessToast(`${provider.toUpperCase()} API key saved! Re-queue your prompt to continue.`);
+            showSuccessToast(source === "pass"
+                ? `${provider.toUpperCase()} pass path saved. Re-queue your prompt to continue.`
+                : `${provider.toUpperCase()} API key saved! Re-queue your prompt to continue.`);
         }
         catch (e) {
             const error = e instanceof Error ? e.message : String(e);
             alert(`Error: ${error}`);
             saveBtn.disabled = false;
-            saveBtn.textContent = "Save & Retry";
+            configurePopupSource(source, sourceBtn, keyInput, saveBtn, hintEl);
         }
     };
     // Enter key to save
@@ -216,11 +282,14 @@ async function showKeyConfigPopup(provider, opts) {
         if (e.key === "Enter")
             saveBtn.click();
     };
-    showAllLink.onclick = (e) => {
-        e.preventDefault();
-        modal.remove();
-        showKeyManager();
-    };
+    modal.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target?.id === "show-all-keys") {
+            e.preventDefault();
+            modal.remove();
+            showKeyManager();
+        }
+    });
 }
 function showSuccessToast(message) {
     const toast = document.createElement("div");
@@ -410,6 +479,7 @@ async function showKeyManager(highlightProvider) {
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([provider, info]) => {
         const highlightClass = provider === highlightProvider ? "highlighted" : "";
+        const source = info.source === "pass" ? "pass" : "local";
         const keyUrl = getProviderKeyUrl(provider);
         const getKeyLink = keyUrl
             ? `<a href="${keyUrl}" target="_blank" rel="noopener" class="btn-get-key" title="Get API key from ${provider}">&#x2197;</a>`
@@ -417,14 +487,25 @@ async function showKeyManager(highlightProvider) {
         const statusDot = info.configured
             ? `<span class="status-dot configured" title="Configured">&#x25CF;</span>`
             : `<span class="status-dot missing" title="Not set">&#x25CB;</span>`;
+        const sourceToggleTitle = source === "pass"
+            ? "Using a pass entry path"
+            : "Using a locally stored key";
         return `
-                <div class="key-row ${highlightClass}" data-provider="${escapeHtml(provider)}">
+                <div class="key-row ${highlightClass} source-${source}"
+                     data-provider="${escapeHtml(provider)}"
+                     data-source="${source}"
+                     data-configured="${info.configured ? "true" : "false"}"
+                     data-pass-path="${escapeHtml(info.pass_path || "")}">
                     ${statusDot}
                     <span class="provider-name">${escapeHtml(provider)}</span>
                     ${getKeyLink}
-                    <input type="password"
-                           class="key-input"
-                           placeholder="key..."
+                    <button class="btn-source-toggle" data-provider="${escapeHtml(provider)}" type="button" title="${escapeHtml(sourceToggleTitle)}"${PASS_AVAILABLE ? "" : " disabled"}>
+                        ${source === "pass" ? "pass" : "key"}
+                    </button>
+                    <input class="key-input"
+                           placeholder="${source === "pass" ? "pass path..." : (info.configured ? "Stored locally" : "key...")}"
+                           value="${source === "pass" ? escapeHtml(info.pass_path || "") : ""}"
+                           ${source === "pass" ? 'type="text"' : 'type="password"'}
                            data-provider="${escapeHtml(provider)}">
                     <button class="btn-save" data-provider="${escapeHtml(provider)}">Save</button>
                     <button class="btn-delete" data-provider="${escapeHtml(provider)}" title="Clear key">&times;</button>
@@ -456,7 +537,7 @@ async function showKeyManager(highlightProvider) {
 
         <div class="liberation-providers">
             <h3>API Keys</h3>
-            <p class="hint">Enter your API keys below. Keys are saved locally.</p>
+            <p class="hint">Use <code>key</code> for local storage or <code>pass</code> to store only a CLI-managed pass entry path.</p>
             ${providersHtml}
         </div>
 
@@ -471,6 +552,19 @@ async function showKeyManager(highlightProvider) {
     });
     modal.querySelectorAll(".btn-delete").forEach(btn => {
         btn.onclick = () => deleteKey(btn.dataset.provider);
+    });
+    modal.querySelectorAll(".btn-source-toggle").forEach(btn => {
+        btn.onclick = () => {
+            const row = btn.closest(".key-row");
+            if (!row)
+                return;
+            const nextSource = getRowSource(row) === "pass" ? "local" : "pass";
+            setRowSource(row, nextSource);
+            row.querySelector(".key-input")?.focus();
+        };
+    });
+    modal.querySelectorAll(".key-row").forEach(row => {
+        setRowSource(row, getRowSource(row));
     });
     const copyBtn = modal.querySelector(".btn-copy-unmapped");
     if (copyBtn) {
@@ -488,17 +582,21 @@ async function showKeyManager(highlightProvider) {
     }
 }
 async function saveKey(provider) {
+    const row = document.querySelector(`.key-row[data-provider="${provider}"]`);
     const input = document.querySelector(`.key-row[data-provider="${provider}"] .key-input`);
-    const key = input?.value?.trim();
-    if (!key) {
-        alert("Please enter an API key");
+    const source = row?.dataset.source === "pass" ? "pass" : "local";
+    const value = input?.value?.trim();
+    if (!value) {
+        alert(source === "pass" ? "Please enter a pass entry path" : "Please enter an API key");
         return;
     }
     try {
         const resp = await api.fetchApi(`/api/liberation/keys/${provider}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key }),
+            body: JSON.stringify(source === "pass"
+                ? { source, pass_path: value }
+                : { source, key: value }),
         });
         if (!resp.ok) {
             const err = await resp.json();

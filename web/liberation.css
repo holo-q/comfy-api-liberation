@@ -178,7 +178,8 @@
 
 /* Buttons */
 .btn-save,
-.btn-delete {
+.btn-delete,
+.btn-source-toggle {
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -196,6 +197,36 @@
 
 .btn-save:hover {
     opacity: 0.85;
+}
+
+.btn-source-toggle {
+    min-width: 42px;
+    padding: 0 8px;
+    background: transparent;
+    color: var(--descrip-text, #999);
+    border: 1px solid var(--border-color, #4e4e4e);
+    font-family: monospace;
+    text-transform: lowercase;
+}
+
+.btn-source-toggle:hover:not(:disabled) {
+    color: var(--fg-color, #fff);
+    border-color: var(--p-primary-color, #31b9f4);
+}
+
+.btn-source-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.key-row.source-pass .btn-source-toggle {
+    color: #10b981;
+    border-color: color-mix(in srgb, #10b981 55%, var(--border-color, #4e4e4e));
+}
+
+.key-row.source-local .btn-source-toggle {
+    color: var(--p-primary-color, #31b9f4);
+    border-color: color-mix(in srgb, var(--p-primary-color, #31b9f4) 55%, var(--border-color, #4e4e4e));
 }
 
 .btn-delete {
@@ -305,6 +336,13 @@
     font-size: 14px;
     height: auto;
     white-space: nowrap;
+}
+
+.btn-source-toggle.large {
+    min-width: 54px;
+    height: auto;
+    padding: 10px 12px;
+    font-size: 13px;
 }
 
 /* Highlighted row */

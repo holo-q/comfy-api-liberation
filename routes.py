@@ -41,12 +41,22 @@ def register_routes():
 
         try:
             data = await request.json()
-            key = data.get('key')
+            source = data.get("source", "local")
+
+            if source == "pass":
+                pass_path = (data.get("pass_path") or "").strip()
+                if not pass_path:
+                    return web.json_response({"error": "No pass path provided"}, status=400)
+
+                config.set_pass_path(provider, pass_path)
+                return web.json_response({"status": "ok", "provider": provider, "source": "pass"})
+
+            key = (data.get("key") or "").strip()
             if not key:
                 return web.json_response({"error": "No key provided"}, status=400)
 
             config.set_api_key(provider, key)
-            return web.json_response({"status": "ok", "provider": provider})
+            return web.json_response({"status": "ok", "provider": provider, "source": "local"})
         except Exception as e:
             log.error(f"Error setting key: {e}")
             return web.json_response({"error": str(e)}, status=500)
@@ -93,6 +103,7 @@ def register_routes():
         return web.json_response({
             "providers": config.PROVIDERS,
             "key_urls": mappings.KEY_URLS,
+            "pass_available": config.is_pass_available(),
         })
 
     log.info("Liberation API routes registered")

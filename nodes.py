@@ -17,13 +17,18 @@ class APIKeyManager:
         return {
             "required": {
                 "provider": (providers, {"default": "google"}),
-                "action": (["check", "set", "clear"], {"default": "check"}),
+                "action": (["check", "set", "set_pass", "clear"], {"default": "check"}),
             },
             "optional": {
                 "api_key": ("STRING", {
                     "default": "",
                     "multiline": False,
                     "placeholder": "Enter API key (not saved in workflow)"
+                }),
+                "pass_path": ("STRING", {
+                    "default": "",
+                    "multiline": False,
+                    "placeholder": "pass entry path (secret managed by CLI)"
                 }),
             }
         }
@@ -34,18 +39,31 @@ class APIKeyManager:
     CATEGORY = "api-liberation"
     OUTPUT_NODE = True
 
-    def manage_key(self, provider: str, action: str, api_key: str = ""):
-        from .config import set_api_key, get_api_key, delete_api_key
+    def manage_key(self, provider: str, action: str, api_key: str = "", pass_path: str = ""):
+        from .config import set_api_key, set_pass_path, get_api_key, get_key_entry, delete_api_key
 
         if action == "set":
             if not api_key:
                 return ("⚠ No key provided",)
             set_api_key(provider, api_key)
-            return (f"✓ {provider} key saved",)
+            return (f"✓ {provider} key saved locally",)
+
+        elif action == "set_pass":
+            if not pass_path:
+                return ("⚠ No pass path provided",)
+            set_pass_path(provider, pass_path)
+            return (f"✓ {provider} pass path saved",)
 
         elif action == "check":
+            entry = get_key_entry(provider)
             has_key = bool(get_api_key(provider))
-            status = "✓ configured" if has_key else "✗ not set"
+            if not entry:
+                status = "✗ not set"
+            elif entry["source"] == "pass":
+                suffix = "✓ configured via pass" if has_key else "⚠ pass path set but not resolved"
+                status = f"{suffix} ({entry['value']})"
+            else:
+                status = "✓ configured locally" if has_key else "⚠ local entry saved but empty"
             return (f"{provider}: {status}",)
 
         elif action == "clear":
@@ -80,8 +98,10 @@ class APIKeyStatus:
 
         for provider, info in sorted(status.items()):
             if info["configured"]:
-                source = info.get("source") or "config-file"
-                configured.append(f"  ✓ {provider} ({source})")
+                if info.get("source") == "pass":
+                    configured.append(f"  ✓ {provider} (pass: {info.get('pass_path')})")
+                else:
+                    configured.append(f"  ✓ {provider} (local)")
             else:
                 missing.append(f"  ✗ {provider}")
 
