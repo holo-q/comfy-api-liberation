@@ -1,0 +1,88 @@
+"""Meshy endpoint mappings."""
+
+MAPPINGS = {
+    r"^/proxy/meshy/openapi/v2/text-to-3d$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v2/text-to-3d",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v2/text-to-3d/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v2/text-to-3d/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/image-to-3d$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/image-to-3d",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/image-to-3d/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/image-to-3d/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/multi-image-to-3d$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/multi-image-to-3d",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/multi-image-to-3d/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/multi-image-to-3d/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/rigging$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/rigging",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/rigging/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/rigging/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/animations$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/animations",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/animations/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/animations/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/retexture$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/retexture",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+    r"^/proxy/meshy/openapi/v1/retexture/([^/]+)$": {
+        "provider": "meshy",
+        "url_template": "https://api.meshy.ai/openapi/v1/retexture/{0}",
+        "auth_fn": lambda key: {"Authorization": f"Bearer {key}"},
+        "request_transform": None,
+        "response_transform": None,
+    },
+}

@@ -42,6 +42,11 @@ PROVIDER_REGISTRY: dict[str, dict] = {
         "node_modules": ["comfy_api_nodes.nodes_elevenlabs"],
         "key_url": "https://elevenlabs.io/app/settings/api-keys",
     },
+    "freepik": {
+        # Magnific-powered nodes route through Freepik's API surface.
+        "node_modules": ["comfy_api_nodes.nodes_magnific"],
+        "key_url": "https://docs.freepik.com/",
+    },
     "grok": {
         "node_modules": ["comfy_api_nodes.nodes_grok"],
         "key_url": "https://console.x.ai/",
@@ -110,6 +115,30 @@ PROVIDER_REGISTRY: dict[str, dict] = {
     "moonvalley": {
         "node_modules": ["comfy_api_nodes.nodes_moonvalley"],
         "key_url": "https://www.moonvalley.com",
+    },
+    "meshy": {
+        "node_modules": ["comfy_api_nodes.nodes_meshy"],
+        "key_url": "https://docs.meshy.ai/",
+    },
+    "reve": {
+        "node_modules": ["comfy_api_nodes.nodes_reve"],
+        "key_url": "https://reve.com",
+    },
+    "bria": {
+        "node_modules": ["comfy_api_nodes.nodes_bria"],
+        "key_url": "https://docs.bria.ai/",
+    },
+    "quiver": {
+        "node_modules": ["comfy_api_nodes.nodes_quiver"],
+        "key_url": "https://quiver.ai/start",
+    },
+    "hitpaw": {
+        "node_modules": ["comfy_api_nodes.nodes_hitpaw"],
+        "key_url": "https://www.hitpaw.com/photo-enhancer-api-doc.html",
+    },
+    "wavespeed": {
+        "node_modules": ["comfy_api_nodes.nodes_wavespeed"],
+        "key_url": "https://wavespeed.ai/docs/api-authentication",
     },
     "ltx": {
         # Comfy file is named nodes_ltxv.py, but provider config is ltx

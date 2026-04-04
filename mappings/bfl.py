@@ -8,6 +8,13 @@ MAPPINGS = {
         'request_transform': None,
         'response_transform': None,
     },
+    r'^/proxy/bfl/flux-2-max/generate$': {
+        'provider': 'bfl',
+        'url_template': 'https://api.bfl.ml/v1/flux-2-max',
+        'auth_fn': lambda key: {'x-key': key},
+        'request_transform': None,
+        'response_transform': None,
+    },
     r'^/proxy/bfl/flux-kontext-max/generate$': {
         'provider': 'bfl',
         'url_template': 'https://api.bfl.ml/v1/flux-kontext-max',

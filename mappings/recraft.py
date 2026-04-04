@@ -1,6 +1,13 @@
 """Recraft endpoint mappings."""
 
 MAPPINGS = {
+    r'^/proxy/recraft/styles$': {
+        'provider': 'recraft',
+        'url_template': 'https://external.api.recraft.ai/v1/styles',
+        'auth_fn': lambda key: {'Authorization': f'Bearer {key}'},
+        'request_transform': None,
+        'response_transform': None,
+    },
     r'^/proxy/recraft/image_generation$': {
         'provider': 'recraft',
         'url_template': 'https://external.api.recraft.ai/v1/images/generations',

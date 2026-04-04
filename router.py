@@ -85,6 +85,13 @@ def rewrite_request(cfg: Any) -> Any:
     """
     path = cfg.endpoint.path
 
+    # A few upstream nodes omit the leading slash ("proxy/..."). Normalize that
+    # here so liberation can still intercept the request instead of silently
+    # falling back to the Comfy proxy.
+    if isinstance(path, str) and path.startswith("proxy/"):
+        path = f"/{path}"
+        cfg = replace(cfg, endpoint=replace(cfg.endpoint, path=path))
+
     # Only process /proxy/* paths
     if not path.startswith("/proxy/"):
         _current_provider.set(None)

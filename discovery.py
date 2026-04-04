@@ -56,12 +56,18 @@ def detect_unmapped_endpoints(endpoint_map: dict) -> set[str]:
     for proxy_path in all_proxies:
         # Check if any pattern matches this proxy path
         matched = False
+        normalized_path = re.sub(r'\{[^}]+\}', '[^/]+', proxy_path)
         for pattern in patterns:
-            # Handle paths with template variables like {model}
-            # Normalize {var} to .+ for matching
-            normalized_path = re.sub(r'\{[^}]+\}', '[^/]+', proxy_path)
             try:
                 if re.match(pattern, proxy_path) or re.match(pattern, normalized_path):
+                    matched = True
+                    break
+                # Some node files expose base prefix constants such as
+                # "/proxy/vertexai/gemini" while requests always append a model
+                # segment at runtime. Treat those base prefixes as covered when a
+                # registered regex maps a more specific child path.
+                prefix_pattern = "^" + re.escape(proxy_path.rstrip("/")) + "/"
+                if pattern.startswith(prefix_pattern):
                     matched = True
                     break
             except re.error:
