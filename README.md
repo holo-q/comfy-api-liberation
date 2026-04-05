@@ -61,8 +61,9 @@ is extracting value. The distinction matters.
 - **Direct API routing** — Calls go straight to vendor APIs, not through any proxy
 - **No account needed** — Works without a ComfyUI/Comfy.org account
 - **Local asset storage** — Images/videos stored locally instead of uploaded to intermediary servers
-- **20+ providers supported** — All major AI APIs covered
-- **Simple UI** — Configure keys through ComfyUI's interface
+- **30+ providers supported** — text, image, video, 3D, SVG, audio, and enhancement APIs
+- **Simple UI** — Configure local keys or `pass` entry paths through ComfyUI's interface
+- **Coverage inspector** — Review unmapped proxy endpoints and copy the full list from the UI
 - **Graceful fallback** — If no key is set, falls back to default ComfyUI behavior
 
 ## Installation
@@ -92,16 +93,25 @@ Restart ComfyUI after installation.
 
 > **Get Key** links directly to each provider's API key page
 > **Status** shows "Configured" (green) or "Not set"
-> Keys are saved locally to `api_keys.json`
+> The `key/pass` toggle lets each row store either a local secret or a `pass` path
+> Coverage now includes a **Copy Full List** button for unmapped endpoints
 
-### Option 2: Environment Variables
+### Option 2: `pass` (CLI-managed secrets)
 
 ```bash
-export GOOGLE_API_KEY="your-key-here"
-export OPENAI_API_KEY="your-key-here"
-export STABILITY_API_KEY="your-key-here"
-# ... etc
+pass insert ai/openai
+pass insert ai/google
+pass insert ai/elevenlabs
 ```
+
+In the UI, switch a provider row from `key` to `pass` and enter the corresponding path, for example:
+
+- `ai/openai`
+- `ai/google`
+- `ai/elevenlabs`
+
+Liberation stores only the path in its config. The secret remains in your password store and is
+resolved at request time with `pass show <path>`.
 
 ### Option 3: Config File
 
@@ -109,13 +119,26 @@ Create `api_keys.json` in the extension directory:
 
 ```json
 {
-  "google": "your-google-key",
-  "openai": "your-openai-key",
-  "stability": "your-stability-key"
+  "google": { "source": "local", "value": "your-google-key" },
+  "openai": { "source": "pass", "value": "ai/openai" },
+  "stability": { "source": "local", "value": "your-stability-key" }
 }
 ```
 
-**Priority:** Environment variables > Config file > UI settings
+Older plain-string entries are still accepted and are treated as local keys.
+
+### Tencent Hunyuan Credentials
+
+Tencent Hunyuan 3D uses Tencent Cloud's signed TC3 request flow rather than a single bearer token.
+For the `tencent` provider, enter one of these formats:
+
+```text
+secretId:secretKey
+secretId:secretKey:region
+{"secret_id":"...","secret_key":"...","region":"na-ashburn"}
+```
+
+If the region is omitted, liberation currently defaults to `na-ashburn`.
 
 ## Supported Providers
 
@@ -132,6 +155,8 @@ Create `api_keys.json` in the extension directory:
 | Ideogram | [Get Key](https://ideogram.ai/manage-api) |
 | Recraft | [Get Key](https://www.recraft.ai/docs) |
 | Luma Labs | [Get Key](https://lumalabs.ai/dream-machine/api/keys) |
+| ElevenLabs | [Get Key](https://elevenlabs.io/app/settings/api-keys) |
+| Freepik / Magnific | [Get Key](https://docs.freepik.com/) |
 
 </td>
 <td width="33%" valign="top">
@@ -157,6 +182,13 @@ Create `api_keys.json` in the extension directory:
 | Moonvalley | [Get Key](https://www.moonvalley.com) |
 | LTX Studio | [Get Key](https://ltx.io/model/api) |
 | Wan (Alibaba) | [Get Key](https://www.alibabacloud.com/help/en/model-studio/get-api-key) |
+| Meshy | [Get Key](https://docs.meshy.ai/) |
+| Reve | [Get Key](https://reve.com) |
+| Bria | [Get Key](https://docs.bria.ai/) |
+| Quiver | [Get Key](https://quiver.ai/start) |
+| HitPaw | [Get Key](https://www.hitpaw.com/photo-enhancer-api-doc.html) |
+| WaveSpeed | [Get Key](https://wavespeed.ai/docs/api-authentication) |
+| Tencent Hunyuan 3D | [Docs](https://intl.cloud.tencent.com/document/product/1284) |
 
 </td>
 </tr>
@@ -179,10 +211,12 @@ No nodes to replace, no workflows to rebuild. The proxy is simply removed from t
 
 - [x] Direct API routing — bypass the proxy, call vendors directly
 - [x] API Key Manager UI with per-provider status
+- [x] Per-provider `pass` storage mode for CLI-managed secrets
 - [x] Local asset virtualization — no uploads to intermediary servers
-- [x] Environment variable and config file support
+- [x] Coverage inspector with copy-to-clipboard for unmapped endpoints
+- [x] Config file support
 - [x] Graceful fallback to default ComfyUI behavior when no key is set
-- [x] 20+ provider mappings (Google, OpenAI, Stability, BFL, Runway, etc.)
+- [x] 30+ provider mappings (Google, OpenAI, Stability, ElevenLabs, Meshy, Kling, Tencent, etc.)
 - [ ] **Real pricing hints** — replace ComfyUI's opaque credit cost per node with actual vendor $/request pricing
 
 ## Debugging
@@ -194,6 +228,7 @@ LIBERATION_DEBUG=1 python main.py
 ## Security
 
 - API keys are stored locally in `api_keys.json` (gitignored)
+- `pass` mode stores only the entry path in `api_keys.json`, not the secret itself
 - Keys are never sent to ComfyUI/Comfy.org servers
 - Each provider only receives its own API key
 - Your data travels directly between you and the vendor — no third-party pass-through
