@@ -21,6 +21,7 @@ class ProviderMapping(TypedDict, total=False):
     provider: str                              # Key name in config (e.g., "google")
     url_template: str                          # Vendor URL with {0}, {1} placeholders
     auth_fn: Callable[[str], dict[str, str]]   # Returns auth headers given API key
+    prepare_request: Callable | None           # Optional full request preparation hook
     request_transform: Callable | None         # Optional request body transform
     response_transform: Callable | None        # Optional response body transform
 
@@ -131,6 +132,11 @@ PROVIDER_REGISTRY: dict[str, dict] = {
     "quiver": {
         "node_modules": ["comfy_api_nodes.nodes_quiver"],
         "key_url": "https://quiver.ai/start",
+    },
+    "tencent": {
+        "node_modules": ["comfy_api_nodes.nodes_hunyuan3d"],
+        "key_url": "https://intl.cloud.tencent.com/document/product/1284",
+        "mapping_module": "tencent",
     },
     "hitpaw": {
         "node_modules": ["comfy_api_nodes.nodes_hitpaw"],

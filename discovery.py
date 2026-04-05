@@ -9,6 +9,23 @@ from pathlib import Path
 log = logging.getLogger("comfy-api-liberation")
 
 
+def _normalize_proxy_path_for_matching(proxy_path: str) -> str:
+    """
+    Normalize symbolic placeholders in extracted proxy paths.
+
+    Generic placeholders still collapse to a single path segment, but version
+    placeholders such as `{KLING_API_VERSION}` are rewritten to concrete
+    version-like values so regexes like `v\\d+` can match during coverage checks.
+    """
+    def repl(match: re.Match[str]) -> str:
+        name = match.group(1)
+        if "VERSION" in name.upper():
+            return "v1"
+        return "[^/]+"
+
+    return re.sub(r"\{([^}]+)\}", repl, proxy_path)
+
+
 def scan_proxy_endpoints() -> set[str]:
     """
     Scan comfy_api_nodes/*.py for /proxy/* string literals.
@@ -56,7 +73,7 @@ def detect_unmapped_endpoints(endpoint_map: dict) -> set[str]:
     for proxy_path in all_proxies:
         # Check if any pattern matches this proxy path
         matched = False
-        normalized_path = re.sub(r'\{[^}]+\}', '[^/]+', proxy_path)
+        normalized_path = _normalize_proxy_path_for_matching(proxy_path)
         for pattern in patterns:
             try:
                 if re.match(pattern, proxy_path) or re.match(pattern, normalized_path):

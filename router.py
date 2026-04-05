@@ -147,6 +147,26 @@ def rewrite_request(cfg: Any) -> Any:
             if mapping.get('response_transform'):
                 _pending_response_transform.set(mapping['response_transform'])
 
+            # Provider-specific request preparation can override URL, headers,
+            # and body in one place (for example Tencent's signed requests).
+            if mapping.get("prepare_request"):
+                try:
+                    prepared = mapping["prepare_request"](
+                        key=key,
+                        url=new_url,
+                        method=cfg.endpoint.method,
+                        data=new_data,
+                        headers=dict(cfg.endpoint.headers or {}),
+                        groups=groups,
+                        mapping=mapping,
+                    )
+                    new_url = prepared.get("url", new_url)
+                    new_data = prepared.get("data", new_data)
+                    auth_headers = prepared.get("headers", auth_headers)
+                except Exception as e:
+                    log.warning(f"Request preparation failed for {provider}: {e}")
+                    raise
+
             # Create new endpoint with absolute URL and merged headers
             new_headers = {**(cfg.endpoint.headers or {}), **auth_headers}
 
